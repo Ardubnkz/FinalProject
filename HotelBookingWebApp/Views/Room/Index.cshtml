@@ -1,0 +1,27 @@
+﻿@model List<HotelBookingWebApp.Models.Room>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "All Rooms";
+}
+
+<h2 class="mb-4 text-center">Available Rooms</h2>
+
+<div class="row">
+    @foreach (var room in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@room.RoomType</h5>
+                    <p class="card-text">@room.Description</p>
+                    <p>
+                        <strong>Room #:</strong> @room.RoomNumber <br />
+                        <strong>Bed:</strong> @room.BedType <br />
+                        <strong>Price:</strong> $@room.Price
+                    </p>
+                    <a href="#" class="btn btn-primary w-100">Reserve</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

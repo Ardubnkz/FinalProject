@@ -1,0 +1,44 @@
+﻿@model HotelBookingWebApp.Models.Room
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Room";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow p-4">
+            <h3 class="text-center mb-3">🏡 Add a New Room</h3>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Room Number</label>
+                    <input type="text" class="form-control" name="RoomNumber" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Room Type</label>
+                    <input type="text" class="form-control" name="RoomType" placeholder="Example: Sea View" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price per Night ($)</label>
+                    <input type="number" class="form-control" step="0.01" name="Price" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bed Type</label>
+                    <input type="text" class="form-control" name="BedType" placeholder="Example: Queen" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="Description" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Add Room</button>
+            </form>
+
+            <p class="text-center text-primary mt-3">@ViewBag.Message</p>
+        </div>
+    </div>
+</div>

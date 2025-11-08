@@ -26,15 +26,15 @@ namespace HotelBookingWebApp.Controllers
                 ViewBag.Message = "Please fill in all fields";
                 return View();
             }
-            user.PasswordHash = HashPassword(user.PasswordHash);
+            string hashedPassword = HashPassword(user.PasswordHash);
             string connStr = _configuration.GetConnectionString("DefaultConnection");
             using (var conn = new MySqlConnection(connStr))
             {
                 conn.Open();
-                var cmd = new MySqlCommand("INSERT INTO users(name, email, password_hash) VALUES (@name, @mail, @pass", conn);
+                var cmd = new MySqlCommand("INSERT INTO users (name, email, password_hash) VALUES (@name, @mail, @pass)", conn);
                 cmd.Parameters.AddWithValue("@name", user.Name);
                 cmd.Parameters.AddWithValue("@mail", user.Email);
-                cmd.Parameters.AddWithValue("@name", user.PasswordHash);
+                cmd.Parameters.AddWithValue("@pass", hashedPassword);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -73,13 +73,14 @@ namespace HotelBookingWebApp.Controllers
                     string storedHash = reader["password_hash"].ToString();
                     if (VerifyPassword(password, storedHash))
                     {
-                        HttpContext.Session.SetString("userEmail", email);
+                        HttpContext.Session.SetString("UserEmail", email);
                         HttpContext.Session.SetString("UserName", reader["name"].ToString());
-                        return RedirectToAction("Welcome"+ reader["name"].ToString());
+                        reader.Close();
+                        return RedirectToAction("Welcome");
 
                     }
                 }
-                ViewBag.Message = "Invalid Email or PAssword";
+                ViewBag.Message = "Invalid Email or Password";
             }
             return View();
         }
