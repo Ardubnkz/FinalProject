@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userName = Context.Session.GetString("UserName");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,18 +16,35 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">
-            <a class="navbar-brand" href="/"> Hotel Booking</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false">
+            <a class="navbar-brand" href="/">Hotel Booking</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/User/Login">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/User/Register">Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/User/Welcome">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Room/Index">Rooms</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Room/Add">Add Room</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Booking/MyBookings">My Bookings</a></li>
+
+                    @if (string.IsNullOrEmpty(userEmail))
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/User/Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/User/Register">Register</a></li>
+                    }
+                    else
+                    {
+                        @if (userEmail.ToLower() == "admin@hotel.com")
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/Room/Add">Add Room</a></li>
+                        }
+
+                        <li class="nav-item d-flex align-items-center text-light me-2">
+                            <span class="nav-link disabled">@userName</span>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="/User/Logout">Logout</a></li>
+                    }
                 </ul>
             </div>
         </div>

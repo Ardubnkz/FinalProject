@@ -1,0 +1,40 @@
+﻿@model List<HotelBookingWebApp.Models.Booking>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Bookings";
+}
+
+<h2 class="text-center mb-4"> My Reservations</h2>
+
+@if (!Model.Any())
+{
+    <p class="text-center text-muted">No bookings found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th>Room Type</th>
+                <th>Check‑In</th>
+                <th>Check‑Out</th>
+                <th>Price/Night</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.RoomType</td>
+                    <td>@b.CheckInDate.ToShortDateString()</td>
+                    <td>@b.CheckOutDate.ToShortDateString()</td>
+                    <td>$@b.Price</td>
+                    <td>
+                    <a href="/Booking/Cancel?bookingId=@b.BookingId" class="btn btn-danger btn-sm">Cancel</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

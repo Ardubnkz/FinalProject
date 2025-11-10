@@ -5,7 +5,19 @@
 }
 
 <h2 class="mb-4 text-center">Available Rooms</h2>
-
+<form method="get" class="row justify-content-center mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Check‑In</label>
+        <input type="date" name="checkInDate" value="@ViewBag.CheckIn" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Check‑Out</label>
+        <input type="date" name="checkOutDate" value="@ViewBag.CheckOut" class="form-control" />
+    </div>
+    <div class="col-md-2 align-self-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
 <div class="row">
     @foreach (var room in Model)
     {
@@ -19,7 +31,7 @@
                         <strong>Bed:</strong> @room.BedType <br />
                         <strong>Price:</strong> $@room.Price
                     </p>
-                    <a href="#" class="btn btn-primary w-100">Reserve</a>
+                    <a href="/Booking/Reserve?roomId=@room.RoomId" class="btn btn-primary w-100">Reserve</a>
                 </div>
             </div>
         </div>

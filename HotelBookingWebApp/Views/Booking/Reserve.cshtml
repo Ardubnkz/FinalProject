@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Reserve Room";
+}
+
+<h3>Book Your Stay</h3>
+<form method="post">
+    <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
+    <div class="mb-3">
+        <label class="form-label">Check‑In Date</label>
+        <input type="date" name="checkInDate" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Check‑Out Date</label>
+        <input type="date" name="checkOutDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success w-100">Reserve</button>
+</form>
+
+<p class="text-center mt-3 text-primary">@ViewBag.Message</p>
