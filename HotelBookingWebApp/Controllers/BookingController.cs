@@ -23,6 +23,12 @@ namespace HotelBookingWebApp.Controllers
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
                 return RedirectToAction("Login", "User");
+            if(checkOutDate<= checkInDate)
+            {
+                ViewBag.Message = "Check-out date must be after check in";
+                ViewBag.RoomId = roomId;
+                return View();
+            }
             string email = HttpContext.Session.GetString("UserEmail");
             int userId = 0;
             string connStr = _config.GetConnectionString("DefaultConnection");
@@ -36,16 +42,26 @@ namespace HotelBookingWebApp.Controllers
                 if (reader.Read())
                     userId = Convert.ToInt32(reader["user_id"]);
                 reader.Close();
+                string checkSql = @"SELECT COUNT(*) from bookings WHERE room_id = @roomId
+                                    AND NOT (@out<= check_in_date OR @in >= check_out_date);";
+                var cmdCheck = new MySqlCommand(checkSql, conn);
+                cmdCheck.Parameters.AddWithValue("@roomId", roomId);
+                cmdCheck.Parameters.AddWithValue("@in", checkInDate);
+                cmdCheck.Parameters.AddWithValue("@out", checkOutDate);
 
-                var cmd = new MySqlCommand(
-                    "INSERT INTO bookings (user_id, room_id, check_in_date, check_out_date) VALUES (@uid,@rid,@in,@out)",
-                    conn);
-                cmd.Parameters.AddWithValue("@uid", userId);
-                cmd.Parameters.AddWithValue("@rid", roomId);
-                cmd.Parameters.AddWithValue("@in", checkInDate);
-                cmd.Parameters.AddWithValue("@out", checkOutDate);
-
-                cmd.ExecuteNonQuery();
+                int conflicts = Convert.ToInt32(cmdCheck.ExecuteScalar());
+                if (conflicts > 0)
+                {
+                    ViewBag.Message = "This room is already booked for the selected dates";
+                    ViewBag.RoomId = roomId;
+                    return View();
+                }
+                var cmdInsert = new MySqlCommand("INSERT INTO bookings (user_id, room_id, check_in_date, check_out_date) VALUES (@uid , @rid, @in, @out)", conn);
+                cmdInsert.Parameters.AddWithValue("@uid", userId);
+                cmdInsert.Parameters.AddWithValue("@rid", roomId);
+                cmdInsert.Parameters.AddWithValue("@in", checkInDate);
+                cmdInsert.Parameters.AddWithValue("@out", checkOutDate);
+                cmdInsert.ExecuteNonQuery();
             }
             ViewBag.Message = "Room reserved succesfully!";
             return View();
